@@ -14,5 +14,28 @@
                 "port": 3001
             }
         }
-    }
+    },
+		"schema": {
+				"Query": {
+						"accounts": "[Accounts_Documents]"
+				},
+				"Accounts_Documents": {
+						"_id": "ID",
+						"username": "String",
+						"password": "String",
+						"salt": "String",
+						"email": "String",
+						"token": "String",
+						"databases": "[Database]"
+				},
+				"Database": {
+						"name": "String",
+						"ip": "String",
+						"port": "Int",
+						"user": "String",
+						"pass": "String",
+						"type": "String",
+						"schema": "String"
+				}
+		}
 }
