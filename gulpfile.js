@@ -20,12 +20,20 @@ gulp.task('installServices', async () => {
     }
 });
 
-gulp.task('runServices', ['installServices'], () => {
+gulp.task('runServices', ['installServices'], async () => {
     const services = config.services;
 
     for (const serviceName in services) {
         if (serviceName !== path.basename(__dirname)) {
-            spawn('npm', ['start'], {cwd: 'services/' + serviceName});
+            spawn.sync('npm', ['i'], {cwd: 'services/' + serviceName});
+            const child = await spawn('npm', ['start'], {cwd: 'services/' + serviceName});
+            child.stdout.pipe(process.stdout);
+            child.stderr.pipe(process.stdout);
         }
     }
+});
+
+gulp.task('start', ['runServices'], async () => {
+    const child = spawn('npm', ['start']);
+    child.stdout.pipe(process.stdout);
 });
