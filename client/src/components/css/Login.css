@@ -1,0 +1,24 @@
+.Login {
+
+}
+
+.grid {
+    text-align: center;
+    height: 100vh;
+}
+
+.column {
+    max-width: 500px;
+}
+
+.segment {
+    text-align: center;
+}
+
+.login-header {
+    color: green;
+}
+
+.button {
+    width: 100%;
+}
