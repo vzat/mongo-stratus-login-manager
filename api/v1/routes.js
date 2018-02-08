@@ -20,8 +20,9 @@ routes.post('/login', async (req, res) => {
 
         const dataRetriever = config.services['mongo-stratus-data-retriever'];
 
-        const query = `query GetUserHashedPassword ($username: String) {
+        const query = `query GetHashedPassword ($username: String) {
             getAccounts (query: {username: $username}) {
+                username
                 password
             }
         }`;
@@ -48,16 +49,26 @@ routes.post('/login', async (req, res) => {
             throw new Error('No Data Received');
         }
 
-        if (response.data.getAccounts.length !== 1) {
+        let hashedPassword = null;
+        for (const userNo in response.data.getAccounts) {
+            const user = response.data.getAccounts[userNo];
+            if (user.username === username) {
+                hashedPassword = user.password;
+
+                if (await bcrypt.compare(password, hashedPassword)) {
+                    res.end(JSON.stringify({'ok': 1}));
+                }
+                else {
+                    res.end(JSON.stringify({'ok': 0}));
+                }
+
+                break;
+            }
+        }
+
+        if (!hashedPassword) {
             res.end(JSON.stringify({'ok': 0}));
         }
-
-        const hashedPassword = response.data.getAccounts[0].password;
-        if (await bcrypt.compare(password, hashedPassword)) {
-            res.end(JSON.stringify({'ok': 1}));
-        }
-
-        res.end(JSON.stringify({'ok': 0}));
     }
     catch (err) {
         logger.log('error', err);

@@ -10,12 +10,12 @@ gulp.task('installServices', async () => {
     const services = config.services;
 
     if (process.argv.indexOf('--remove') !== -1) {
-        await del('services/*');
+        del.sync('services/*');
     }
 
     for (const serviceName in services) {
         if (serviceName !== path.basename(__dirname)) {
-            await git.clone('https://github.com/vzat/mongo-stratus-data-retriever', {args: './services/' + serviceName});
+            await git.clone('https://github.com/vzat/' + serviceName, {args: './services/' + serviceName});
         }
     }
 });
