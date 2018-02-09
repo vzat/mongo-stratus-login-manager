@@ -24,7 +24,7 @@ class Login extends Component {
         const username = this.state.username;
         const password = this.state.password;
 
-        const res = await fetch('http://localhost:3000/api/v1/internal/login', {
+        const res = await fetch('/api/v1/internal/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -1,3 +1,5 @@
+const path = require('path');
+
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -14,10 +16,15 @@ module.exports = new Promise((resolve, reject) => {
     app.use(bodyParser.json());
     app.use(morgan('combined'));
 
-    // Debug only
-    app.get('/', function (req, res) {
-        res.end('Login Manager Server');
-    });
+    // Serve static files for production
+    if (process.env.NODE_ENV === 'production') {
+        app.use(express.static(path.join(__dirname, '../client/build')));
+    }
+    else {
+        app.get('/', function (req, res) {
+            res.end('Login Manager Server');
+        });
+    }
 
     app.use('/api/v1/internal', routes);
 
