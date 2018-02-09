@@ -6,6 +6,11 @@ import './css/Login.css';
 import { Button, Grid, Segment, Form, Input } from 'semantic-ui-react'
 
 class Login extends Component {
+    state = {
+        username: '',
+        password: ''
+    };
+
     componentDidMount = () => {
         document.title = "Login";
     };
@@ -15,7 +20,9 @@ class Login extends Component {
         history.push("/register");
     };
 
-    handleLogin = async (username, password) => {
+    handleLogin = async () => {
+        const username = this.state.username;
+        const password = this.state.password;
 
         const res = await fetch('http://localhost:3000/api/v1/internal/login', {
             method: 'POST',
@@ -23,14 +30,18 @@ class Login extends Component {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              'username': 'john_smith',
-              'password': '1234'
+              'username': username,
+              'password': password
             })
         });
 
         const json = await res.json();
 
         console.log(json);
+    };
+
+    handleChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value});
     };
 
     render() {
@@ -44,10 +55,23 @@ class Login extends Component {
                       <Segment raised>
                           <Form>
                               <Form.Field>
-                                  <Input icon = 'user' iconPosition = 'left' placeholder = 'Username' />
+                                  <Input
+                                      icon = 'user'
+                                      iconPosition = 'left'
+                                      placeholder = 'Username'
+                                      name = "username"
+                                      onChange = {this.handleChange}
+                                  />
                               </Form.Field>
                               <Form.Field>
-                                  <Input icon = 'lock' iconPosition = 'left' placeholder = 'Password' type = 'password' />
+                                  <Input
+                                      icon = 'lock'
+                                      iconPosition = 'left'
+                                      placeholder = 'Password'
+                                      type = 'password'
+                                      name = "password"
+                                      onChange = {this.handleChange}
+                                  />
                               </Form.Field>
                               <Button color = 'green' onClick = {this.handleLogin}> Login </Button>
                               <p> {registerText} <a href = '' onClick = {this.goToRegisterPage}> Register </a> </p>
