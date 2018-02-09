@@ -15,6 +15,24 @@ class Login extends Component {
         history.push("/register");
     };
 
+    handleLogin = async (username, password) => {
+
+        const res = await fetch('http://localhost:3000/api/v1/internal/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              'username': 'john_smith',
+              'password': '1234'
+            })
+        });
+
+        const json = await res.json();
+
+        console.log(json);
+    };
+
     render() {
         const registerText = 'Don\'t have an account?';
 
@@ -31,7 +49,7 @@ class Login extends Component {
                               <Form.Field>
                                   <Input icon = 'lock' iconPosition = 'left' placeholder = 'Password' type = 'password' />
                               </Form.Field>
-                              <Button color = 'green'> Login </Button>
+                              <Button color = 'green' onClick = {this.handleLogin}> Login </Button>
                               <p> {registerText} <a href = '' onClick = {this.goToRegisterPage}> Register </a> </p>
                           </Form>
                       </Segment>
