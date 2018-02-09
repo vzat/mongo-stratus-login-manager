@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 
 import './css/App.css';
 
@@ -6,27 +7,26 @@ import Login from './Login';
 import Register from './Register';
 
 class App extends Component {
-  state = {
-      login: 1
-  }
-
-  setLogin = (value) => {
-      this.setState({login: value});
-  };
-
   render() {
-    const loginPage = this.state.login;
-
-    console.log(this.state);
-
     return (
-      <div className="App">
-          {loginPage ?
-              <Login setLogin = {this.setLogin} />
-              :
-              <Register setLogin = {this.setLogin} />
-          }
-      </div>
+      <Router>
+          <div className="App">
+              <Route
+                  exact path = "/"
+                  render = {() => (
+                      <Redirect to = "/login" />
+                  )}
+              />
+              <Route
+                  path = "/login"
+                  component = {Login}
+              />
+              <Route
+                  path = "/register"
+                  component = {Register}
+              />
+          </div>
+      </Router>
     );
   }
 }
