@@ -11,6 +11,57 @@ const routes = express.Router();
 
 const protocol = 'http://';
 
+async function duplicateUsername (username) {
+    try {
+        const dataRetriever = config.services['mongo-stratus-data-retriever'];
+
+        // Check if the username is taken
+        const query = `query CheckIfUsernameExists ($username: String) {
+            getAccounts (query: {username: $username}) {
+                username
+            }
+        }`;
+
+        let options = {
+            method: 'POST',
+            uri: protocol + dataRetriever.ip + ':' + dataRetriever.port + '/api/v1/admin/mongoStratus',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + (process.env.APIToken || 'z321')
+            },
+            body: JSON.stringify({
+                query: query,
+                variables: {
+                    'username': username,
+                }
+            })
+        };
+
+        const userCheckResponseJSON = await request.post(options);
+        const userCheckResponse = await JSON.parse(userCheckResponseJSON);
+
+        if (Object.keys(userCheckResponse) === 0 || Object.keys(userCheckResponse.data) === 0 || Object.keys(userCheckResponse.data.getAccounts) === 0) {
+            throw new Error('No Data Received');
+        }
+
+        const accounts = userCheckResponse.data.getAccounts;
+
+        // Check if the username is taken
+        for (const accountNo in accounts) {
+            const account = accounts[accountNo];
+            console.log(account);
+            if (account.username === username) {
+                return true;
+            }
+        }
+        return false;
+    }
+    catch (err) {
+        logger.log('error', err);
+        return true;
+    }
+}
+
 routes.post('/login', async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
@@ -56,6 +107,9 @@ routes.post('/login', async (req, res) => {
                 hashedPassword = user.password;
 
                 if (await bcrypt.compare(password, hashedPassword)) {
+                    req.session.authenticated = true;
+                    // res.status(301).redirect('https://google.com/');
+                    // next();
                     res.end(JSON.stringify({'ok': 1}));
                 }
                 else {
@@ -86,40 +140,45 @@ routes.post('/register', async (req, res) => {
 
         const dataRetriever = config.services['mongo-stratus-data-retriever'];
 
-        // Check if the username is taken
-        const query = `query CheckIfUsernameExists ($username: String) {
-            getAccounts (query: {username: $username}) {
-                username
-            }
-        }`;
+        // // Check if the username is taken
+        // const query = `query CheckIfUsernameExists ($username: String) {
+        //     getAccounts (query: {username: $username}) {
+        //         username
+        //     }
+        // }`;
+        //
+        // let options = {
+        //     method: 'POST',
+        //     uri: protocol + dataRetriever.ip + ':' + dataRetriever.port + '/api/v1/admin/mongoStratus',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'Authorization': 'Bearer ' + (process.env.APIToken || 'z321')
+        //     },
+        //     body: JSON.stringify({
+        //         query: query,
+        //         variables: {
+        //             'username': username,
+        //         }
+        //     })
+        // };
+        //
+        // const userCheckResponseJSON = await request.post(options);
+        // const userCheckResponse = await JSON.parse(userCheckResponseJSON);
+        //
+        // if (Object.keys(userCheckResponse) === 0 || Object.keys(userCheckResponse.data) === 0 || Object.keys(userCheckResponse.data.getAccounts) === 0) {
+        //     throw new Error('No Data Received');
+        // }
+        //
+        // if (userCheckResponse.data.getAccounts.length !== 0) {
+        //     res.end(JSON.stringify({'ok': 0, 'error': 'Duplicate Username'}));
+        //     throw new Error('Username is already taken');
+        // }
 
-        let options = {
-            method: 'POST',
-            uri: protocol + dataRetriever.ip + ':' + dataRetriever.port + '/api/v1/admin/mongoStratus',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + (process.env.APIToken || 'z321')
-            },
-            body: JSON.stringify({
-                query: query,
-                variables: {
-                    'username': username,
-                }
-            })
-        };
-
-        const userCheckResponseJSON = await request.post(options);
-        const userCheckResponse = await JSON.parse(userCheckResponseJSON);
-
-        if (Object.keys(userCheckResponse) === 0 || Object.keys(userCheckResponse.data) === 0 || Object.keys(userCheckResponse.data.getAccounts) === 0) {
-            throw new Error('No Data Received');
-        }
-
-        if (userCheckResponse.data.getAccounts.length !== 0) {
-            res.end(JSON.stringify({'ok': 0, 'error': 'Duplicate Username'}));
+        // Check duplicate username
+        if (await duplicateUsername(username)) {
+            res.end(JSON.stringify({'ok': 0, 'error': 'username'}));
             throw new Error('Username is already taken');
         }
-
 
         // Create User
         const saltRounds = 10;
@@ -132,7 +191,7 @@ routes.post('/register', async (req, res) => {
             }
         }`;
 
-        options = {
+        const options = {
             method: 'POST',
             uri: protocol + dataRetriever.ip + ':' + dataRetriever.port + '/api/v1/admin/mongoStratus',
             headers: {
@@ -163,7 +222,7 @@ routes.post('/register', async (req, res) => {
             res.end(JSON.stringify({'ok': 1}));
         }
 
-        res.end(JSON.stringify({'ok': 0}));
+        res.end(JSON.stringify({'ok': 0, 'error': 'account'}));
     }
     catch (err) {
         logger.log('error', err);

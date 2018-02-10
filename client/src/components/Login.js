@@ -8,7 +8,8 @@ import { Button, Grid, Segment, Form, Input } from 'semantic-ui-react'
 class Login extends Component {
     state = {
         username: '',
-        password: ''
+        password: '',
+        redirect: false
     };
 
     componentDidMount = () => {
@@ -37,7 +38,9 @@ class Login extends Component {
 
         const json = await res.json();
 
-        console.log(json);
+        if (json.ok && json.ok == 1) {
+            window.location = "http://localhost:4000/";
+        }
     };
 
     handleChange = (event) => {
@@ -53,9 +56,9 @@ class Login extends Component {
                   <Grid.Column>
                       <h2 className = 'login-header'> MongoStratus </h2>
                       <Segment raised>
-                          <Form>
+                          <Form onSubmit = {this.handleLogin}>
                               <Form.Field>
-                                  <Input
+                                  <Form.Input
                                       icon = 'user'
                                       iconPosition = 'left'
                                       placeholder = 'Username'
@@ -64,7 +67,7 @@ class Login extends Component {
                                   />
                               </Form.Field>
                               <Form.Field>
-                                  <Input
+                                  <Form.Input
                                       icon = 'lock'
                                       iconPosition = 'left'
                                       placeholder = 'Password'
@@ -73,7 +76,7 @@ class Login extends Component {
                                       onChange = {this.handleChange}
                                   />
                               </Form.Field>
-                              <Button color = 'green' onClick = {this.handleLogin}> Login </Button>
+                              <Form.Button color = 'green'> Login </Form.Button>
                               <p> {registerText} <a href = '' onClick = {this.goToRegisterPage}> Register </a> </p>
                           </Form>
                       </Segment>

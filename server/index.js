@@ -1,6 +1,7 @@
 const path = require('path');
 
 const express = require('express');
+const session = require('express-session');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
@@ -14,6 +15,9 @@ module.exports = new Promise((resolve, reject) => {
     app.set('port', process.env.PORT || 3000);
     app.use(cors());
     app.use(bodyParser.json());
+    app.use(session({
+        secret: 'MongoStratus'
+    }));
     app.use(morgan('combined'));
 
     // Serve static files for production
