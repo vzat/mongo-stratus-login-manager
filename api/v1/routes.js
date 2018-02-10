@@ -32,7 +32,7 @@ async function duplicateUsername (username) {
             body: JSON.stringify({
                 query: query,
                 variables: {
-                    'username': username,
+                    'username': username
                 }
             })
         };
@@ -40,7 +40,7 @@ async function duplicateUsername (username) {
         const userCheckResponseJSON = await request.post(options);
         const userCheckResponse = await JSON.parse(userCheckResponseJSON);
 
-        if (Object.keys(userCheckResponse) === 0 || Object.keys(userCheckResponse.data) === 0 || Object.keys(userCheckResponse.data.getAccounts) === 0) {
+        if (Object.keys(userCheckResponse) === 0 || Object.keys(userCheckResponse.data) === 0 || userCheckResponse.data.getAccounts === undefined) {
             throw new Error('No Data Received');
         }
 
@@ -49,7 +49,7 @@ async function duplicateUsername (username) {
         // Check if the username is taken
         for (const accountNo in accounts) {
             const account = accounts[accountNo];
-            console.log(account);
+            console.log(account.username);
             if (account.username === username) {
                 return true;
             }
@@ -61,6 +61,27 @@ async function duplicateUsername (username) {
         return true;
     }
 }
+
+routes.post('/valid/username', async (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+
+    try {
+        const username = req.body.username;
+
+        // Check duplicate username
+        const dupUsername = await duplicateUsername(username);
+        if (dupUsername) {
+            res.end(JSON.stringify({'ok': 0, 'error': 'username'}));
+            throw new Error('Username is already taken');
+        }
+
+        res.end(JSON.stringify({'ok': 1}));
+    }
+    catch (err) {
+        logger.log('error', err);
+        res.end(JSON.stringify({'error': err}));
+    }
+});
 
 routes.post('/login', async (req, res) => {
     res.setHeader('Content-Type', 'application/json');

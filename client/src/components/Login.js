@@ -3,13 +3,15 @@ import { withRouter } from 'react-router-dom';
 
 import './css/Login.css';
 
-import { Button, Grid, Segment, Form, Input } from 'semantic-ui-react'
+import { Button, Grid, Segment, Form, Input, Message } from 'semantic-ui-react'
 
 class Login extends Component {
     state = {
         username: '',
         password: '',
-        redirect: false
+        redirect: false,
+        loading: false,
+        invalidFields: false
     };
 
     componentDidMount = () => {
@@ -22,6 +24,9 @@ class Login extends Component {
     };
 
     handleLogin = async () => {
+        this.setState({'invalidFields': false});
+        this.setState({'loading': true});
+
         const username = this.state.username;
         const password = this.state.password;
 
@@ -41,6 +46,10 @@ class Login extends Component {
         if (json.ok && json.ok == 1) {
             window.location = "http://localhost:4000/";
         }
+        else {
+            this.setState({'invalidFields': true});
+            this.setState({'loading': false});
+        }
     };
 
     handleChange = (event) => {
@@ -56,7 +65,7 @@ class Login extends Component {
                   <Grid.Column>
                       <h2 className = 'login-header'> MongoStratus </h2>
                       <Segment raised>
-                          <Form onSubmit = {this.handleLogin}>
+                          <Form onSubmit = {this.handleLogin} loading = {this.state.loading} >
                               <Form.Field>
                                   <Form.Input
                                       icon = 'user'
@@ -76,6 +85,12 @@ class Login extends Component {
                                       onChange = {this.handleChange}
                                   />
                               </Form.Field>
+                              {this.state.invalidFields &&
+                                  <Message negative >
+                                      <Message.Header> Invalid fields </Message.Header>
+                                      The username or password is invalid
+                                  </Message>
+                              }
                               <Form.Button color = 'green'> Login </Form.Button>
                               <p> {registerText} <a href = '' onClick = {this.goToRegisterPage}> Register </a> </p>
                           </Form>

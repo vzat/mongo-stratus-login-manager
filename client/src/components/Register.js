@@ -15,7 +15,7 @@ class Register extends Component {
         confirmPassword: '',
         invalidEmail: false,
         invalidUsername: false,
-        invalidPassword: false,
+        invalidConfirmPassword: false,
         loading: false
     };
 
@@ -28,7 +28,37 @@ class Register extends Component {
         history.push("/login");
     };
 
+    validUsername = async () => {
+        const username = this.state.username;
+
+        if (!username || username === '' || username.length < 5) {
+            this.setState({'invalidUsername': true});
+            return false;
+        }
+
+        const res = await fetch('/api/v1/internal/valid/username', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              'username': username
+            })
+        });
+
+        const json = await res.json();
+
+        if (!json.ok || json.ok === 0) {
+            this.setState({'invalidUsername': true});
+            return false;
+        }
+
+        return true;
+    };
+
     handleRegister = async () => {
+        this.setState({loading: true});
+
         const email = this.state.email;
         const username = this.state.username;
         const password = this.state.password;
@@ -36,27 +66,25 @@ class Register extends Component {
 
         let invalidFields = false;
 
+        const validUsername = await this.validUsername();
+        if (!validUsername) {
+            invalidFields = true;
+        }
+
         if (!email || email === '' || email.indexOf('@') === -1 || email.indexOf('.') === -1) {
             this.setState({'invalidEmail': true});
             invalidFields = true;
         }
 
-        if (!password || !confirmPassword || password === '' || confirmPassword === '' || password !== confirmPassword) {
-            this.setState({'invalidPassword': true});
-            invalidFields = true;
-        }
-
-        // TODO: Check if username is unique
-        if (!username || username === '') {
-            this.setState({'invalidUsername': true});
+        if (!password || !confirmPassword || password === '' || confirmPassword === '' || password !== confirmPassword || password.length < 5) {
+            this.setState({'invalidConfirmPassword': true});
             invalidFields = true;
         }
 
         if (invalidFields) {
+            this.setState({loading: false});
             return;
         }
-
-        this.setState({loading: true});
 
         const res = await fetch('/api/v1/internal/register', {
             method: 'POST',
@@ -72,9 +100,13 @@ class Register extends Component {
 
         const json = await res.json();
 
+        console.log(json);
+
         if (json.ok && json.ok == 1) {
-            window.location = "http://localhost:4000/";
+            window.location = "/login";
         }
+
+        this.setState({loading: false});
     };
 
     handleChange = (event) => {
@@ -119,8 +151,8 @@ class Register extends Component {
                                   />
                                   {this.state.invalidUsername &&
                                       <Message negative >
-                                          <Message.Header> Duplicate username </Message.Header>
-                                          The username has already been taken
+                                          <Message.Header> Invalid username </Message.Header>
+                                          The username has already been taken or is too short
                                       </Message>
                                   }
                               </Form.Field>
@@ -133,7 +165,7 @@ class Register extends Component {
                                       type = 'password'
                                       name = 'password'
                                       onChange = {this.handleChange}
-                                      error = {this.state.invalidPassword}
+                                      error = {this.state.invalidConfirmPassword}
                                   />
                               </Form.Field>
                               <Form.Field>
@@ -145,18 +177,16 @@ class Register extends Component {
                                       type = 'password'
                                       name = 'confirmPassword'
                                       onChange = {this.handleChange}
-                                      error = {this.state.invalidPassword}
+                                      error = {this.state.invalidConfirmPassword}
                                   />
-                                  {this.state.invalidPassword &&
+                                  {this.state.invalidConfirmPassword &&
                                       <Message negative >
-                                          <Message.Header> Password mismatch </Message.Header>
-                                          The passwords do not match
+                                          <Message.Header> Invalid Password </Message.Header>
+                                          The passwords do not match or are too short
                                       </Message>
                                   }
                               </Form.Field>
-                              <Form.Field>
-                                  <Form.Button color = 'green'> Register </Form.Button>
-                              </Form.Field>
+                              <Form.Button color = 'green'> Register </Form.Button>
                               <p> Already have an account? <a href = '' onClick = {this.goToLoginPage}> Login </a> </p>
                           </Form>
                       </Segment>
