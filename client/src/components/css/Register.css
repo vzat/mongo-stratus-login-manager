@@ -1,0 +1,28 @@
+.Register {
+    padding-left: 15px;
+}
+
+.grid {
+    text-align: center;
+    height: 100vh;
+}
+
+.column {
+    max-width: 500px;
+}
+
+.segment {
+    text-align: center;
+}
+
+.register-header {
+    color: green;
+}
+
+.button {
+    width: 100%;
+}
+
+.message {
+    text-align: left;
+}

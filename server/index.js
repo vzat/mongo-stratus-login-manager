@@ -1,4 +1,8 @@
+const path = require('path');
+
 const express = require('express');
+// const session = require('express-session');
+const session = require('cookie-session');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
@@ -12,12 +16,24 @@ module.exports = new Promise((resolve, reject) => {
     app.set('port', process.env.PORT || 3000);
     app.use(cors());
     app.use(bodyParser.json());
+    app.use(session({
+        name: 'session',
+        secret: 'MongoStratus',
+        // resave: false,
+        // saveUninitialized: false,
+        maxAge: 60000
+    }));
     app.use(morgan('combined'));
 
-    // Debug only
-    app.get('/', function (req, res) {
-        res.end('Login Manager Server');
-    });
+    // Serve static files for production
+    if (process.env.NODE_ENV === 'production') {
+        app.use(express.static(path.join(__dirname, '../client/build')));
+    }
+    else {
+        app.get('/', function (req, res) {
+            res.end('Login Manager Server');
+        });
+    }
 
     app.use('/api/v1/internal', routes);
 

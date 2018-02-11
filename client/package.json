@@ -1,16 +1,21 @@
 {
-  "name": "mongo-stratus-login-manager",
-  "version": "0.1.0",
+  "name": "mongo-stratus-login-manager-client",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-scripts": "1.1.0"
+    "react": "16.2.0",
+    "react-dom": "16.2.0",
+    "react-router-dom": "4.2.2",
+    "react-scripts": "1.1.0",
+    "semantic-ui-css": "2.2.14",
+    "semantic-ui-react": "0.78.2",
+    "universal-cookie": "^2.1.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "proxy": "http://localhost:3000/"
 }

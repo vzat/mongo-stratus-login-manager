@@ -1,0 +1,41 @@
+{
+    "services": {
+        "mongo-stratus-data-retriever": {
+            "ip": "localhost",
+            "port": 5000
+        },
+        "mongo-stratus-login-manager": {
+            "server": {
+                "ip": "localhost",
+                "port": 3000
+            },
+            "client": {
+                "ip": "localhost",
+                "port": 3001
+            }
+        }
+    },
+		"schema": {
+				"Query": {
+						"accounts": "[Accounts_Documents]"
+				},
+				"Accounts_Documents": {
+						"_id": "ID",
+						"username": "String",
+						"password": "String",
+						"salt": "String",
+						"email": "String",
+						"token": "String",
+						"databases": "[Database]"
+				},
+				"Database": {
+						"name": "String",
+						"ip": "String",
+						"port": "Int",
+						"user": "String",
+						"pass": "String",
+						"type": "String",
+						"schema": "String"
+				}
+		}
+}
