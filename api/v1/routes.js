@@ -49,7 +49,7 @@ async function duplicateUsername (username) {
         // Check if the username is taken
         for (const accountNo in accounts) {
             const account = accounts[accountNo];
-            console.log(account.username);
+            // console.log(account.username);
             if (account.username === username) {
                 return true;
             }

@@ -25,8 +25,10 @@ class App extends Component {
         const json = await res.json();
 
         if (json.ok && json.ok === 1) {
-            console.log('validSession');
-            this.setState({'validSession': true});
+            window.location = 'http://localhost:4000';
+            // console.log('validSession');
+            // this.setState({'validSession': true});
+            //
         }
     };
 
@@ -37,16 +39,9 @@ class App extends Component {
                 <div className="App">
                     <Route
                         exact path = "/"
-                        render = {
-                            this.state.validSession ?
-                                () => (
-                                    <Redirect to = "/protected" />
-                                )
-                                :
-                                () => (
-                                    <Redirect to = "/login" />
-                                )
-                        }
+                        render = {() => (
+                            <Redirect to = "/login" />
+                        )}
                     />
                     <Route
                         path = "/login"
