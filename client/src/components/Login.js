@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 
 import './css/Login.css';
 
-import { Button, Grid, Segment, Form, Input, Message } from 'semantic-ui-react'
+import { Grid, Segment, Form, Message } from 'semantic-ui-react'
 
 class Login extends Component {
     state = {
@@ -32,6 +32,7 @@ class Login extends Component {
 
         const res = await fetch('/api/v1/internal/login', {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -43,7 +44,7 @@ class Login extends Component {
 
         const json = await res.json();
 
-        if (json.ok && json.ok == 1) {
+        if (json.ok && json.ok === 1) {
             window.location = "http://localhost:4000/";
         }
         else {

@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 
 import './css/Register.css';
 
-import { Button, Grid, Segment, Form, Input, Message } from 'semantic-ui-react'
+import { Grid, Segment, Form, Message } from 'semantic-ui-react'
 
 import utils from '../utils';
 
@@ -102,7 +102,7 @@ class Register extends Component {
 
         console.log(json);
 
-        if (json.ok && json.ok == 1) {
+        if (json.ok && json.ok === 1) {
             window.location = "/login";
         }
 

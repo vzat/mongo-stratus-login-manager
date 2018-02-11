@@ -83,6 +83,23 @@ routes.post('/valid/username', async (req, res) => {
     }
 });
 
+routes.post('/valid/session', async (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+
+    try {
+        if (req.session.username && req.session.username !== '') {
+            res.end(JSON.stringify({'ok': 1}));
+        }
+        else {
+            res.end(JSON.stringify({'ok': 0, error: 'session'}));
+        }
+    }
+    catch (err) {
+        logger.log('error', err);
+        res.end(JSON.stringify({'error': err}));
+    }
+});
+
 routes.post('/login', async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
@@ -128,9 +145,9 @@ routes.post('/login', async (req, res) => {
                 hashedPassword = user.password;
 
                 if (await bcrypt.compare(password, hashedPassword)) {
-                    req.session.authenticated = true;
-                    // res.status(301).redirect('https://google.com/');
-                    // next();
+                    req.session.username = username;
+                    // req.session.sessionID = req.sessionID;
+                    // console.log(req.session);
                     res.end(JSON.stringify({'ok': 1}));
                 }
                 else {
@@ -160,40 +177,6 @@ routes.post('/register', async (req, res) => {
         const email = req.body.email;
 
         const dataRetriever = config.services['mongo-stratus-data-retriever'];
-
-        // // Check if the username is taken
-        // const query = `query CheckIfUsernameExists ($username: String) {
-        //     getAccounts (query: {username: $username}) {
-        //         username
-        //     }
-        // }`;
-        //
-        // let options = {
-        //     method: 'POST',
-        //     uri: protocol + dataRetriever.ip + ':' + dataRetriever.port + '/api/v1/admin/mongoStratus',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Authorization': 'Bearer ' + (process.env.APIToken || 'z321')
-        //     },
-        //     body: JSON.stringify({
-        //         query: query,
-        //         variables: {
-        //             'username': username,
-        //         }
-        //     })
-        // };
-        //
-        // const userCheckResponseJSON = await request.post(options);
-        // const userCheckResponse = await JSON.parse(userCheckResponseJSON);
-        //
-        // if (Object.keys(userCheckResponse) === 0 || Object.keys(userCheckResponse.data) === 0 || Object.keys(userCheckResponse.data.getAccounts) === 0) {
-        //     throw new Error('No Data Received');
-        // }
-        //
-        // if (userCheckResponse.data.getAccounts.length !== 0) {
-        //     res.end(JSON.stringify({'ok': 0, 'error': 'Duplicate Username'}));
-        //     throw new Error('Username is already taken');
-        // }
 
         // Check duplicate username
         if (await duplicateUsername(username)) {

@@ -1,7 +1,8 @@
 const path = require('path');
 
 const express = require('express');
-const session = require('express-session');
+// const session = require('express-session');
+const session = require('cookie-session');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
@@ -16,7 +17,11 @@ module.exports = new Promise((resolve, reject) => {
     app.use(cors());
     app.use(bodyParser.json());
     app.use(session({
-        secret: 'MongoStratus'
+        name: 'session',
+        secret: 'MongoStratus',
+        // resave: false,
+        // saveUninitialized: false,
+        maxAge: 60000
     }));
     app.use(morgan('combined'));
 
