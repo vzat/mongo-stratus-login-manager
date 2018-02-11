@@ -152,7 +152,7 @@ class Register extends Component {
                                   {this.state.invalidUsername &&
                                       <Message negative >
                                           <Message.Header> Invalid username </Message.Header>
-                                          The username has already been taken or is too short
+                                          The username has already been taken or is too short (less than 5 characters)
                                       </Message>
                                   }
                               </Form.Field>
@@ -182,7 +182,7 @@ class Register extends Component {
                                   {this.state.invalidConfirmPassword &&
                                       <Message negative >
                                           <Message.Header> Invalid Password </Message.Header>
-                                          The passwords do not match or are too short
+                                          The passwords do not match or are too short (less than 5 characters)
                                       </Message>
                                   }
                               </Form.Field>
