@@ -7,33 +7,24 @@ import Login from './Login';
 import Register from './Register';
 
 class App extends Component {
-    state = {
-        validSession: false
-    }
-
     componentDidMount = async () => {
-        const res = await fetch('/api/v1/internal/valid/session', {
-            method: 'POST',
-            // https://stackoverflow.com/questions/36824106/express-doesnt-set-a-cookie
-            // credentials: 'same-origin',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const json = await res.json();
-
-        if (json.ok && json.ok === 1) {
-            window.location = 'http://localhost:4000';
-            // console.log('validSession');
-            // this.setState({'validSession': true});
-            //
-        }
+        // const res = await fetch('/api/v1/internal/valid/session', {
+        //     method: 'POST',
+        //     // credentials: 'same-origin',
+        //     credentials: 'include',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     }
+        // });
+        //
+        // const json = await res.json();
+        //
+        // if (json.ok && json.ok === 1) {
+        //     window.location = 'http://localhost:4000';
+        // }
     };
 
     render() {
-        console.log(this.state.validSession);
         return (
             <Router>
                 <div className="App">
@@ -58,10 +49,3 @@ class App extends Component {
 }
 
 export default App;
-
-// <Route
-//     exact path = "/"
-//     render = {() => (
-//         <Redirect to = "/login" />
-//     )}
-// />
