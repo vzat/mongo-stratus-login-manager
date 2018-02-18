@@ -24,7 +24,7 @@ async function duplicateUsername (username) {
 
         let options = {
             method: 'POST',
-            uri: protocol + dataRetriever.ip + ':' + dataRetriever.port + '/api/v1/admin/mongoStratus',
+            uri: protocol + dataRetriever.ip + ':' + dataRetriever.port + '/api/v1/admin/mongoStratus/mongoStratus',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + (process.env.APIToken || 'z321')
@@ -118,7 +118,7 @@ routes.post('/login', async (req, res) => {
 
         const options = {
             method: 'POST',
-            uri: protocol + dataRetriever.ip + ':' + dataRetriever.port + '/api/v1/admin/mongoStratus',
+            uri: protocol + dataRetriever.ip + ':' + dataRetriever.port + '/api/v1/admin/mongoStratus/mongoStratus',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + (process.env.APIToken || 'z321')
@@ -197,7 +197,7 @@ routes.post('/register', async (req, res) => {
 
         const options = {
             method: 'POST',
-            uri: protocol + dataRetriever.ip + ':' + dataRetriever.port + '/api/v1/admin/mongoStratus',
+            uri: protocol + dataRetriever.ip + ':' + dataRetriever.port + '/api/v1/admin/mongoStratus/mongoStratus',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + (process.env.APIToken || 'z321')
