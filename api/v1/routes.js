@@ -113,6 +113,7 @@ routes.post('/login', async (req, res) => {
             getAccounts (query: {username: $username}) {
                 username
                 password
+                token
             }
         }`;
 
@@ -146,6 +147,7 @@ routes.post('/login', async (req, res) => {
 
                 if (await bcrypt.compare(password, hashedPassword)) {
                     req.session.username = username;
+                    req.session.token = user.token;
                     // req.session.sessionID = req.sessionID;
                     // console.log(req.session);
                     res.end(JSON.stringify({'ok': 1}));

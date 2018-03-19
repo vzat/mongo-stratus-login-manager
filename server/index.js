@@ -21,7 +21,7 @@ module.exports = new Promise((resolve, reject) => {
         secret: 'MongoStratus',
         // resave: false,
         // saveUninitialized: false,
-        maxAge: 60000
+        // maxAge: 60000
     }));
     app.use(morgan('combined'));
 
