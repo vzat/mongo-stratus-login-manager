@@ -19,7 +19,7 @@ class App extends Component {
         const json = await res.json();
 
         if (json.ok && json.ok === 1) {
-            window.location = 'http://localhost:4001';
+            window.location = '/';
         }
     };
 
