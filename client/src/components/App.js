@@ -8,9 +8,8 @@ import Register from './Register';
 
 class App extends Component {
     componentDidMount = async () => {
-        const res = await fetch('/api/v1/internal/valid/session', {
+        const res = await fetch('/api/v1/internal/login-manager/valid/session', {
             method: 'POST',
-            // credentials: 'same-origin',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'

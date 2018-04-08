@@ -32,7 +32,7 @@ class Login extends Component {
         const username = this.state.username;
         const password = this.state.password;
 
-        const res = await fetch('/api/v1/internal/login', {
+        const res = await fetch('/api/v1/internal/login-manager/login', {
             method: 'POST',
             credentials: 'include',
             headers: {
