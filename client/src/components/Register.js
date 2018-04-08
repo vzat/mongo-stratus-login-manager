@@ -3,9 +3,11 @@ import { withRouter } from 'react-router-dom';
 
 import './css/Register.css';
 
-import { Grid, Segment, Form, Message } from 'semantic-ui-react'
+import { Grid, Segment, Form, Message, Image } from 'semantic-ui-react'
 
 import utils from '../utils';
+
+import logo from './resources/images/MongoStratusLogo.svg';
 
 class Register extends Component {
     state = {
@@ -31,12 +33,12 @@ class Register extends Component {
     validUsername = async () => {
         const username = this.state.username;
 
-        if (!username || username === '' || username.length < 5) {
+        if (!username || username === '' || username.length < 3) {
             this.setState({'invalidUsername': true});
             return false;
         }
 
-        const res = await fetch('/api/v1/internal/valid/username', {
+        const res = await fetch('/api/v1/internal/login-manager/valid/username', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -86,7 +88,7 @@ class Register extends Component {
             return;
         }
 
-        const res = await fetch('/api/v1/internal/register', {
+        const res = await fetch('/api/v1/internal/login-manager/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -119,7 +121,7 @@ class Register extends Component {
           <div className = 'Register'>
               <Grid centered verticalAlign = 'middle'>
                   <Grid.Column>
-                      <h2 className = 'register-header'> MongoStratus </h2>
+                      <Image src = {logo} size = 'small' />
                       <Segment raised>
                           <Form onSubmit = {this.handleRegister} loading = {this.state.loading} >
                               <Form.Field>
@@ -152,7 +154,7 @@ class Register extends Component {
                                   {this.state.invalidUsername &&
                                       <Message negative >
                                           <Message.Header> Invalid username </Message.Header>
-                                          The username has already been taken or is too short (less than 5 characters)
+                                          The username has already been taken or is too short (less than 3 characters)
                                       </Message>
                                   }
                               </Form.Field>

@@ -3,7 +3,9 @@ import { withRouter } from 'react-router-dom';
 
 import './css/Login.css';
 
-import { Grid, Segment, Form, Message } from 'semantic-ui-react'
+import { Grid, Segment, Form, Message, Image } from 'semantic-ui-react'
+
+import logo from './resources/images/MongoStratusLogo.svg';
 
 class Login extends Component {
     state = {
@@ -30,7 +32,7 @@ class Login extends Component {
         const username = this.state.username;
         const password = this.state.password;
 
-        const res = await fetch('/api/v1/internal/login', {
+        const res = await fetch('/api/v1/internal/login-manager/login', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -45,7 +47,7 @@ class Login extends Component {
         const json = await res.json();
 
         if (json.ok && json.ok === 1) {
-            window.location = "http://localhost:4000/";
+            window.location = "http://localhost:4001/";
         }
         else {
             this.setState({'invalidFields': true});
@@ -64,7 +66,7 @@ class Login extends Component {
           <div className = 'Login'>
               <Grid centered verticalAlign = 'middle'>
                   <Grid.Column>
-                      <h2 className = 'login-header'> MongoStratus </h2>
+                      <Image src = {logo} size = 'small' />
                       <Segment raised>
                           <Form onSubmit = {this.handleLogin} loading = {this.state.loading} >
                               <Form.Field>

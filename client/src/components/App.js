@@ -8,20 +8,19 @@ import Register from './Register';
 
 class App extends Component {
     componentDidMount = async () => {
-        // const res = await fetch('/api/v1/internal/valid/session', {
-        //     method: 'POST',
-        //     // credentials: 'same-origin',
-        //     credentials: 'include',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     }
-        // });
-        //
-        // const json = await res.json();
-        //
-        // if (json.ok && json.ok === 1) {
-        //     window.location = 'http://localhost:4000';
-        // }
+        const res = await fetch('/api/v1/internal/login-manager/valid/session', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const json = await res.json();
+
+        if (json.ok && json.ok === 1) {
+            window.location = 'http://localhost:4001';
+        }
     };
 
     render() {

@@ -17,5 +17,10 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:3000/"
+  "proxy": {
+      "/api/v1/internal/login-manager": {
+          "target": "http://localhost:3000/",
+          "pathRewrite": {"^/api/v1/internal/login-manager": "/api/v1/internal"}
+      }
+  }
 }
