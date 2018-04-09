@@ -32,7 +32,7 @@ class Login extends Component {
         const username = this.state.username;
         const password = this.state.password;
 
-        const res = await fetch('/api/v1/internal/login-manager/login', {
+        const res = await fetch('/api/v1/internal/login', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -47,7 +47,7 @@ class Login extends Component {
         const json = await res.json();
 
         if (json.ok && json.ok === 1) {
-            window.location = '/';
+            window.location = 'http://connection.mongostratus.me/';
         }
         else {
             this.setState({'invalidFields': true});

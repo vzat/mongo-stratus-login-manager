@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "build": "^0.1.4",
     "react": "16.2.0",
     "react-dom": "16.2.0",
     "react-router-dom": "4.2.2",
     "react-scripts": "1.1.0",
+    "run-script": "^0.1.1",
     "semantic-ui-css": "2.2.14",
     "semantic-ui-react": "0.78.2",
     "universal-cookie": "^2.1.2"
@@ -18,9 +20,11 @@
     "eject": "react-scripts eject"
   },
   "proxy": {
-      "/api/v1/internal/login-manager": {
-          "target": "http://localhost:3000/",
-          "pathRewrite": {"^/api/v1/internal/login-manager": "/api/v1/internal"}
+    "/api/v1/login-manager/internal": {
+      "target": "http://localhost:3000/",
+      "pathRewrite": {
+        "^/api/v1/login-manager/internal": "/api/v1/internal"
       }
+    }
   }
 }

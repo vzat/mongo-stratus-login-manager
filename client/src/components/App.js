@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 
 import './css/App.css';
 
@@ -8,7 +8,7 @@ import Register from './Register';
 
 class App extends Component {
     componentDidMount = async () => {
-        const res = await fetch('/api/v1/internal/login-manager/valid/session', {
+        const res = await fetch('/api/v1/internal/valid/session', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -19,7 +19,7 @@ class App extends Component {
         const json = await res.json();
 
         if (json.ok && json.ok === 1) {
-            window.location = '/';
+            window.location = 'http://connection.mongostratus.me/';
         }
     };
 
@@ -27,6 +27,7 @@ class App extends Component {
         return (
             <Router>
                 <div className="App">
+		    <Switch>
                     <Route
                         exact path = "/"
                         render = {() => (
@@ -35,12 +36,17 @@ class App extends Component {
                     />
                     <Route
                         path = "/login"
-                        component = {Login}
+                        render = {props =>
+				<Login {...props} />
+			}
                     />
                     <Route
                         path = "/register"
-                        component = {Register}
+                        render = {props =>
+				<Register {...props} />
+			}
                     />
+		   </Switch>
                 </div>
             </Router>
         );

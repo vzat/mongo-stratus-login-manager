@@ -1,3 +1,5 @@
+const path = require('path');
+
 const express = require('express');
 // const session = require('express-session');
 const session = require('cookie-session');
@@ -16,9 +18,19 @@ module.exports = new Promise((resolve, reject) => {
     app.use(bodyParser.json());
     app.use(session({
         name: 'session',
-        secret: 'MongoStratus'
+        secret: 'MongoStratus',
+	domain: '.mongostratus.me',
+	cookie: {
+		domain: '.mongostratus.me'
+	}
     }));
     app.use(morgan('combined'));
+
+    app.set('trust proxy');
+
+    if (process.env.NODE_ENV === 'production') {
+        app.use(express.static(path.join(__dirname, '../client/build')));
+    }
 
     app.use('/api/v1/internal', routes);
 

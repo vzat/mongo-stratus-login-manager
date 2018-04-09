@@ -38,7 +38,7 @@ class Register extends Component {
             return false;
         }
 
-        const res = await fetch('/api/v1/internal/login-manager/valid/username', {
+        const res = await fetch('/api/v1/internal/valid/username', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -88,7 +88,7 @@ class Register extends Component {
             return;
         }
 
-        const res = await fetch('/api/v1/internal/login-manager/register', {
+        const res = await fetch('/api/v1/internal/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
